@@ -1,5 +1,6 @@
 
-
+/*Particle prototype to compute each particle movment and lyfecicle
+Code from http://codepen.io/soulwire/pen/foktm */
 function Particle( x, y, radius ) {
     this.init( x, y, radius );
 }
@@ -49,40 +50,38 @@ Particle.prototype = {
 };
 
 
-
+/* Jquery Dom Ready */
 $(function(){
+	
+  /* Enable Pusher Library logs to console */
   Pusher.logToConsole = true;
-
+	
+  /* Initialise a new pusher object with the APP keys */
   var pusher = new Pusher('29d01404cb03899e6396', {
                           cluster: 'eu',
                           encrypted: true
                           });
+  /* Grabs a reference of the HTML5 audio object */						  
   var sound = document.getElementById("audio");
+  /* Lower's it's volume */
   sound.volume = 0.4;
+  
+  /* Subscribes to a new pusher channel named 'counter' */
   var channel = pusher.subscribe('counter');
   
+  /* Particle Controll vars */
   var MAX_PARTICLES = 280;
-  var COLOURS = [ '#69D2E7', '#A7DBD8', '#E0E4CC', '#F38630', '#FA6900', '#FF4E50', '#F9D423' ];
-  
+  var COLOURS = [ '#69D2E7', '#A7DBD8', '#E0E4CC', '#F38630', '#FA6900', '#FF4E50', '#F9D423' ];  
   var particles = [];
   var pool = [];
   
+  /* Initializes a new Sketch object */
   var demo = Sketch.create({
                            container: document.getElementById( 'background' )
                            });
   
- /* demo.setup = function() {
-  
-    // Set off some initial particles.
-    var i, x, y;
-  
-    for ( i = 0; i < 20; i++ ) {
-        x = ( demo.width * 0.5 ) + random( -100, 100 );
-        y = ( demo.height * 0.5 ) + random( -100, 100 );
-        demo.spawn( x, y );
-    }
-  };*/
-  
+ 
+  /* Particle Spawn Method */
   demo.spawn = function( x, y ) {
   
     if ( particles.length >= MAX_PARTICLES )
@@ -104,6 +103,8 @@ $(function(){
     particles.push( particle );
   }
   
+  
+  /* Particle update method */
   demo.update = function() {
   
     var i, particle;
@@ -117,6 +118,7 @@ $(function(){
     }
   };
   
+  /* Particle draw method */
   demo.draw = function() {
   
     demo.globalCompositeOperation  = 'lighter';
@@ -127,32 +129,27 @@ $(function(){
   };
   
   
-  
+  /* Bind a function to the Update action published through the pusher channel, when message arrives the listenner function will update the counter display on the center of the screen while, at the same time a sound will be played and some particles will be spawned in the center of the screen  */
   channel.bind('update', function(data) {
                $('h1').text(data.message);
                sound.play();
                
-               
-               
-               // Set off some initial particles.
                     var i, x, y;
                
                     for ( i = 0; i < 30; i++ ) {
-                        x = ( demo.width * 0.5 ) + random( -100, 100 );
-                        y = ( demo.height * 0.5 ) + random( -100, 100 );
+                        x = ( demo.width * 0.5 ) + random( -150, 150 );
+                        y = ( demo.height * 0.5 ) + random( -150, 150 );
                         demo.spawn( x, y );
                     }
               
                
                });
 
-  
+  /* Some times during my tests the notification arrives before the page finish to reload, i've added a listtener to the submit button click event, that unbinds the 'update' event from pusher channel , preventing the sound and the animation to be played on the client that clicks the button */
   $('input[type=submit]').click(function(){
                                 channel.unbind('update');
                                 });
 
 });
-// ----------------------------------------
-// Example
-// ----------------------------------------
+
 
