@@ -1,0 +1,17 @@
+@import 'mixins';
+
+body, html {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+
+}
+body {
+    position: relative;
+    height: auto;
+    min-height: 100%;
+
+    display:table;
+    @include diagonalLinearGradientBackground(#ffa84c, #ff7b0d);
+}

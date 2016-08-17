@@ -1,0 +1,12 @@
+<div class="container">
+        <%= form_for @hit, url: hit_path  do |f| %>
+        <h2>Hit count!</h2>
+
+        <h1><%= @hits.size %></h1>
+
+        <br />
+
+        <%= f.submit  %>
+
+        <% end %>
+</div>
